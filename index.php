@@ -155,25 +155,55 @@ $app->post("/admin/users/:iduser", function($iduser) {
 });
 
 $app->post("/admin/users/create", function () {
+ 
+ User::verifyLogin();
+ 
+ $user = new User();
+ 
+ $_POST["inadmin"] = (isset($_POST["inadmin"])) ? 1 : 0;
+ 
+ $_POST['despassword'] = password_hash($_POST["despassword"], PASSWORD_DEFAULT, [
+     "cost"=>12
+ ]);
+ 
+ $user->setData($_POST);
+ 
+ $user->save();
+ 
+ header("Location: /admin/users");
+ 
+ exit;
+ 
+});
 
- 	User::verifyLogin();
+$app->get("/admin/forgot", function(){
 
-	$user = new User();
+	$page = new PageAdmin([
+		"header"=>false,
+		"footer"=>false
+	]);
 
- 	$_POST["inadmin"] = (isset($_POST["inadmin"])) ? 1 : 0;
+	$page->setTpl("forgot");
 
- 	$_POST['despassword'] = password_hash($_POST["despassword"], PASSWORD_DEFAULT, [
+});
 
- 		"cost"=>12
+$app->post("/admin/forgot", function(){
 
- 	]);
+	$user = User::getForgot($_POST["email"]);
 
- 	$user->setData($_POST);
+	header("Location: /admin/forgot/sent");
+	exit;
 
-	$user->save();
+});
 
-	header("Location: /admin/users");
- 	exit;
+$app->get("/admin/forgot/sent", function(){
+
+	$page = new PageAdmin([
+		"header"=>false,
+		"footer"=>false
+	]);
+
+	$page->setTpl("forgot-sent");
 
 });
 
