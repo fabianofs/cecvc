@@ -5,9 +5,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Mailer {
 	
-	const USERNAME = "fabio.bianobiano@gmail.com";
-	const PASSWORD = "<?password?>";
-	const NAME_FROM = "Hcode Store";
+	const USERNAME = "";
+	const PASSWORD = "";
+	const NAME_FROM = "Comunidade em Cristo";
 	private $mail;
 	public function __construct($toAddress, $toName, $subject, $tplName, $data = array())
 	{
@@ -33,13 +33,21 @@ class Mailer {
 		//Ask for HTML-friendly debug output
 		$this->mail->Debugoutput = 'html';
 		//Set the hostname of the mail server
-		$this->mail->Host = 'smtp.gmail.com';
+		$this->mail->Host = 'mx1.hostinger.com.br';
 		// use
 		// $this->mail->Host = gethostbyname('smtp.gmail.com');
 		// if your network does not support SMTP over IPv6
 		//Set the SMTP port number - 587 for authenticated TLS, a.k.a. RFC4409 SMTP submission
 		$this->mail->Port = 587;
 		//Set the encryption system to use - ssl (deprecated) or tls
+		$this->mail->SMTPOptions = array(
+		    'ssl' => array(
+		        'verify_peer' => false,
+		        'verify_peer_name' => false,
+		        'allow_self_signed' => true
+		    )
+		);
+
 		$this->mail->SMTPSecure = 'tls';
 		//Whether to use SMTP authentication
 		$this->mail->SMTPAuth = true;
